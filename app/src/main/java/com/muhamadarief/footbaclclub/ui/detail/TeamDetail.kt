@@ -5,5 +5,6 @@ data class TeamDetail(
     val teamName: String,
     val teamFanArt: String,
     val teamFormedYear: String,
-    val teamDesc: String
+    val teamDesc: String,
+    val teamLogo: String
 )

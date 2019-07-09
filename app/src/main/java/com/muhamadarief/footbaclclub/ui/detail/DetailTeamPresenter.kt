@@ -1,5 +1,6 @@
 package com.muhamadarief.footbaclclub.ui.detail
 
+import android.util.Log
 import com.muhamadarief.footbaclclub.data.db.favorite.Favorite
 import com.muhamadarief.footbaclclub.data.db.favorite.FavoriteDao
 import com.muhamadarief.footbaclclub.data.network.ApiClient
@@ -14,6 +15,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class DetailTeamPresenter(val favoriteDao: FavoriteDao) : DetailTeamContract.Presenter {
+
 
     private var mView : DetailTeamContract.View? = null
     private lateinit var disposables: CompositeDisposable
@@ -63,13 +65,41 @@ class DetailTeamPresenter(val favoriteDao: FavoriteDao) : DetailTeamContract.Pre
                 .subscribeOn(Schedulers.io())
                 .subscribe({
                     // jika berhasil insert
-
+                    mView?.addedFavoriteSuccessfully("Berhasil menambahkan team ke Favorite")
                 },{
                     // jika insert gagal
-
+                    Log.d("DetailTeamPresenter", it.message.toString())
+                    mView?.addedFavoriteFailed(it.message.toString())
                 })
         )
     }
 
+    override fun findTeamById(teamId: Int) {
+        disposables.add(
+            favoriteDao.findTeamById(teamId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    mView?.isTeamFavorited(it)
+                },{
+                    Log.d("DetailTeamPresenter", it.message.toString())
+                })
+        )
+    }
+
+    override fun deleteFromFavorite(favorite: Favorite) {
+        disposables.add(
+            Completable.fromAction { favoriteDao.deleteFavorite(favorite) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    // jika berhasil delete
+                    mView?.deletedFavorite("Hapus favorite berhasil")
+                },{
+                    // jika delete gagal
+                    mView?.showError(it.message.toString())
+                })
+        )
+    }
 
 }

@@ -7,16 +7,20 @@ import io.reactivex.Flowable
 @Dao
 interface FavoriteDao {
 
+    //TODO kerjakan get all teams
     @Query("SELECT * FROM favorite")
     fun getAllFavorite() : Flowable<List<Favorite>>
 
+    @Query("SELECT * FROM favorite WHERE id = :teamId")
+    fun findTeamById(teamId: Int) : Flowable<List<Favorite>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addFavorite(favorite: Favorite) : Completable
+    fun addFavorite(favorite: Favorite)
 
     @Delete
-    fun deleteFavorite(favorite: Favorite) : Completable
+    fun deleteFavorite(favorite: Favorite)
 
     @Update
-    fun updateFavorite(favorite: Favorite) : Completable
+    fun updateFavorite(favorite: Favorite)
 
 }

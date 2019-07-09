@@ -21,6 +21,7 @@ fun getTeamDetail(teamItem: TeamItem): TeamDetail {
         teamItem.strTeam,
         teamItem.strTeamFanart1,
         teamItem.intFormedYear,
-        teamItem.strDescriptionEN
+        teamItem.strDescriptionEN,
+        teamItem.strTeamBadge
     )
 }
