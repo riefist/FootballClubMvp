@@ -6,6 +6,8 @@ interface DetailTeamContract {
         fun onAttach(view: View)
         fun onDetach()
         fun getTeamDetail(teamId: String)
+        fun addTeamToFavorite(teamId: Int, teamName: String, teamLogo: String,
+                              teamDesc: String, teamFormedYear: Int, teamFanArt: String)
     }
 
     interface View {

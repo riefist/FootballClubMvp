@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private lateinit var teamAdapter: TeamAdapter
     private val teams = mutableListOf<Team>()
 
+    private var leagueNameSelected : String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -43,6 +45,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 presenter.getTeamsByLeague(leaguesName[position])
+                leagueNameSelected = leaguesName[position]
             }
 
         }
@@ -62,6 +65,13 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         rv_teams.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = teamAdapter
+        }
+
+        swipe_refresh.setOnRefreshListener {
+            //todo refresh data team
+            teams.clear()
+            teamAdapter.notifyDataSetChanged()
+            presenter.getTeamsByLeague(leagueNameSelected)
         }
 
     }

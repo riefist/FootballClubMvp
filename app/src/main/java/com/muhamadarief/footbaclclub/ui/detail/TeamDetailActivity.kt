@@ -15,14 +15,29 @@ class TeamDetailActivity : AppCompatActivity(), DetailTeamContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_team)
 
+        supportActionBar?.title = getString(R.string.team_detail)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         // get teamId from intent
         teamId = intent.getStringExtra(EXTRA_TEAM_ID)
 
-        presenter = DetailTeamPresenter()
+        val appDatabase = InjectorUtils.provideAppDatabase(this)
+        val favoriteDao = InjectorUtils.provideFavoriteDao(appDatabase)
+        presenter = InjectorUtils.provideDetailTeamPresenter(favoriteDao)
+
         presenter.onAttach(this)
 
         presenter.getTeamDetail(teamId)
 
+        fab_favorite.setOnClickListener {
+            presenter.addTeamToFavorite()
+        }
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 
     override fun showLoading(isLoading: Boolean) {
